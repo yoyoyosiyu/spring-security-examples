@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>custom</module>
+        <module>spring-boot-security-jwt</module>
     </modules>
 
 
