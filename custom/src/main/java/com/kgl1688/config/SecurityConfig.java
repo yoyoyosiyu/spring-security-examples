@@ -43,7 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticated()
                     // 加入我们自己的权限控制器
                     .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
-                        @Override
                         public <O extends FilterSecurityInterceptor> O postProcess(O filterSecurityInterceptor) {
                             filterSecurityInterceptor.setSecurityMetadataSource(securityMetadataSource());
                             filterSecurityInterceptor.setAccessDecisionManager(accessDecisionManager());
