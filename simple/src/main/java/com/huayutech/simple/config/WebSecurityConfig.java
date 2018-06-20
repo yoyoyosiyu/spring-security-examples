@@ -9,6 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import java.util.Map;
+
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -23,10 +25,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().antMatchers("/userinfo").hasAnyRole("USER", "ADMIN");
         http.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN");
+        http.authorizeRequests().anyRequest().permitAll();
         //http.authorizeRequests().anyRequest().authenticated().withObjectPostProcessor()
 
         // 在开启csrf的情况下使用，如果关闭csrf的情况下可以注释掉
         http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"));
+
+        Map sharedObjects = http.getSharedObjects();
 
 
     }

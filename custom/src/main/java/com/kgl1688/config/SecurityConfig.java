@@ -48,8 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             filterSecurityInterceptor.setAccessDecisionManager(accessDecisionManager());
                             return filterSecurityInterceptor;
                         }
-                    })
-        ;
+                    });
 
     }
 
