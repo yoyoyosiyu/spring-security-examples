@@ -1,3 +1,15 @@
 server:
   port: 8080
 
+
+rbac:
+  secure:
+    targets:
+      -
+        patterns: ["/admin/**"]
+        id: 71fe9a87-751f-11e8-b70d-f832e4887124
+      -
+        patterns: ["/index.htm","/index.html"]
+        id: b6d27237-751f-11e8-b70d-f832e4887124
+
+
