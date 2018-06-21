@@ -11,5 +11,13 @@ rbac:
       -
         patterns: ["/index.htm","/index.html"]
         id: b6d27237-751f-11e8-b70d-f832e4887124
+        rolesName: [ROLE_ANONYMOUS]
+      -
+        patterns: []
+
+      -
+        patterns: ["/**"]
+        id: 1eccf95a-756c-11e8-85b6-1c1b0d66151b
+        rolesName: [ROLE_ANONYMOUS]
 
 

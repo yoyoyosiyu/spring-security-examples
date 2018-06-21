@@ -1,6 +1,7 @@
 package com.huayutech.customauthorization.security;
 
 import com.huayutech.customauthorization.config.SecuredTarget;
+import lombok.Data;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.web.FilterInvocation;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class RbacSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
@@ -37,12 +39,30 @@ public class RbacSecurityMetadataSource implements FilterInvocationSecurityMetad
 
             AntPathMatcher antPathMatcher = new AntPathMatcher();
 
+            String path = request.getServletPath();
+
             for(SecuredTarget securedTarget: securedTargets) {
 
-                for (String pattern: securedTarget.patterns)
-                    if (antPathMatcher.match(pattern, request.getRequestURI())) {
+                for (String pattern: securedTarget.patterns) {
 
+
+
+                    if (antPathMatcher.match(pattern, path)) {
+
+                        ObjectIdConfigAttribute configAttribute = new ObjectIdConfigAttribute();
+
+                        configAttribute.setObjectId(securedTarget.id);
+
+                        Map templateVariables = antPathMatcher.extractUriTemplateVariables(pattern, path);
+                        if (templateVariables.size()>0) {
+                            configAttribute.setTemplateVariables(templateVariables);
+                        }
+
+                        configAttributes.add(configAttribute);
                     }
+
+
+                }
 
             }
 
@@ -66,7 +86,12 @@ public class RbacSecurityMetadataSource implements FilterInvocationSecurityMetad
         return FilterInvocation.class.isAssignableFrom(clazz);
     }
 
+    @Data
     public static class ObjectIdConfigAttribute implements ConfigAttribute {
+
+        protected Map templateVariables;
+
+        protected String objectId;
 
         @Override
         public String getAttribute() {

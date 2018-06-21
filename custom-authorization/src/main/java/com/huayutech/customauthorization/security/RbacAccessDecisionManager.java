@@ -23,6 +23,8 @@ public class RbacAccessDecisionManager implements AccessDecisionManager {
     @Override
     public void decide(Authentication authentication, Object o, Collection<ConfigAttribute> collection) throws AccessDeniedException, InsufficientAuthenticationException {
 
+        System.out.println(authentication);
+
     }
 
     @Override
