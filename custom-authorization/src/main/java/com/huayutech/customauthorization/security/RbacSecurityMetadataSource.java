@@ -6,13 +6,12 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RbacSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
@@ -33,9 +32,12 @@ public class RbacSecurityMetadataSource implements FilterInvocationSecurityMetad
 
         final HttpServletRequest request = ((FilterInvocation) object).getRequest();
 
+        String method = request.getMethod();
+
         List<ConfigAttribute> configAttributes = new ArrayList<>();
 
         if (securedTargets != null && securedTargets.size() > 0) {
+
 
             AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -43,22 +45,32 @@ public class RbacSecurityMetadataSource implements FilterInvocationSecurityMetad
 
             for(SecuredTarget securedTarget: securedTargets) {
 
-                for (String pattern: securedTarget.patterns) {
 
+                if (securedTarget.getMethods() != null && securedTarget.getMethods().length > 0) {
+
+                    List<String> methods = Arrays.asList(securedTarget.getMethods());
+
+                    if (!methods.contains(request.getMethod()))
+                        break;
+                }
+
+
+                for (String pattern: securedTarget.patterns) {
 
 
                     if (antPathMatcher.match(pattern, path)) {
 
-                        ObjectIdConfigAttribute configAttribute = new ObjectIdConfigAttribute();
+                        SecuredTargetConfigAttribute configAttribute = new SecuredTargetConfigAttribute();
+                        configAttribute.setMatchPattern(pattern);
+                        configAttribute.setSecuredTarget(securedTarget);
 
-                        configAttribute.setObjectId(securedTarget.id);
-
-                        Map templateVariables = antPathMatcher.extractUriTemplateVariables(pattern, path);
-                        if (templateVariables.size()>0) {
-                            configAttribute.setTemplateVariables(templateVariables);
-                        }
+//                        Map templateVariables = antPathMatcher.extractUriTemplateVariables(pattern, path);
+//                        if (templateVariables.size()>0) {
+//                            configAttribute.setTemplateVariables(templateVariables);
+//                        }
 
                         configAttributes.add(configAttribute);
+                        break;
                     }
 
 
@@ -69,7 +81,7 @@ public class RbacSecurityMetadataSource implements FilterInvocationSecurityMetad
         }
 
 
-        return null;
+        return configAttributes;
     }
 
     /**
@@ -87,11 +99,11 @@ public class RbacSecurityMetadataSource implements FilterInvocationSecurityMetad
     }
 
     @Data
-    public static class ObjectIdConfigAttribute implements ConfigAttribute {
+    public static class SecuredTargetConfigAttribute implements ConfigAttribute {
 
-        protected Map templateVariables;
+        protected String matchPattern;
 
-        protected String objectId;
+        protected SecuredTarget securedTarget;
 
         @Override
         public String getAttribute() {

@@ -2,6 +2,24 @@ server:
   port: 8080
 
 
+spring:
+  application:
+      name: account-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/security?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: hkemall
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        hbm2ddl:
+          auto: update
+        show_sql: true
+
+
 rbac:
   secure:
     targets:
@@ -13,11 +31,9 @@ rbac:
         id: b6d27237-751f-11e8-b70d-f832e4887124
         rolesName: [ROLE_ANONYMOUS]
       -
-        patterns: []
-
-      -
         patterns: ["/**"]
         id: 1eccf95a-756c-11e8-85b6-1c1b0d66151b
         rolesName: [ROLE_ANONYMOUS]
+        methods: [GET,POST,DELETE,PATCH]
 
 

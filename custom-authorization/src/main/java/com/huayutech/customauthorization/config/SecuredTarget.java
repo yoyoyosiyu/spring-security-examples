@@ -7,6 +7,7 @@ public class SecuredTarget {
 
     public String id;
     public String[] patterns;
+    public String[] methods;
     public String[] rolesName;
 
 }
