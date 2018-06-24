@@ -36,6 +36,10 @@ public class RbacAccessDecisionManager implements AccessDecisionManager {
 
         Set<Permission> permissions = new HashSet<>();
 
+        /**
+         * RbacSecurityMetadataSource 会返回所有与当前请求的路径的匹配成功的规则。收集起来，并且会同当前认证用户所具有的所有角色，从数据库中查找
+         * 对应的记录，如果记录集为空，说明当前用户并未拥有任何权限，如果有记录，需要进一步进行判断
+         */
         for (ConfigAttribute configAttribute: collection) {
 
             if (configAttribute instanceof RbacSecurityMetadataSource.SecuredTargetConfigAttribute) {

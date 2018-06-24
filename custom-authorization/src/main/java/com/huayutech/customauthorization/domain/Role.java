@@ -2,12 +2,11 @@ package com.huayutech.customauthorization.domain;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
 public class Role {
 
     @Id
@@ -16,5 +15,8 @@ public class Role {
 
     @Column
     protected String name;
+
+    @Column
+    protected String alias;
 
 }
