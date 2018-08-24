@@ -13,6 +13,7 @@
         <module>simple</module>
         <module>spring-boot-security-jwt</module>
         <module>custom-authorization</module>
+        <module>custom-login-page</module>
     </modules>
 
 
